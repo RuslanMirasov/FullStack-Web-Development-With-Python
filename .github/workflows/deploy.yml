@@ -1,0 +1,88 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build site
+        run: |
+          set -e
+          OUT="$GITHUB_WORKSPACE/_site"
+          mkdir -p "$OUT"
+
+          # Копируем файлы, лежащие прямо в корне репозитория (index.html, style.css и т.д.)
+          for f in *; do
+            if [ -f "$f" ]; then
+              cp "$f" "$OUT/"
+            fi
+          done
+
+          # Проходим по всем папкам верхнего уровня (goit-js-hw-01, goit-js-hw-02, ...)
+          for dir in */ ; do
+            dir="${dir%/}"
+
+            case "$dir" in
+              .* | node_modules | _site) continue ;;
+            esac
+
+            if [ -f "$dir/package.json" ] && jq -e '.scripts.build' "$dir/package.json" >/dev/null 2>&1; then
+              echo "==> $dir: найден сборщик, собираю"
+              ( cd "$dir" && npm ci --no-audit --no-fund && npm run build )
+
+              if [ -d "$dir/dist" ]; then
+                SRC="$dir/dist"
+              elif [ -d "$dir/build" ]; then
+                SRC="$dir/build"
+              elif [ -d "$dir/public" ]; then
+                SRC="$dir/public"
+              else
+                echo "!! Не нашёл папку сборки (dist/build/public) в $dir, копирую как есть"
+                SRC="$dir"
+              fi
+
+              mkdir -p "$OUT/$dir"
+              rsync -a --exclude='node_modules' --exclude='.git' "$SRC/" "$OUT/$dir/"
+            else
+              echo "==> $dir: сборщика нет, копирую статику как есть"
+              mkdir -p "$OUT/$dir"
+              rsync -a --exclude='node_modules' --exclude='.git' "$dir/" "$OUT/$dir/"
+            fi
+          done
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
