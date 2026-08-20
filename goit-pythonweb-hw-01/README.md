@@ -1,105 +1,159 @@
-# Домашнє завдання Тема 1. Змінні та типи. Основи функцій
+# Тема 1. Домашня робота
 
-## Задача 1. Замовлення дроїдів
+Прийшов час практики. У домашній роботі буде два завдання. В обох завданнях необхідно застосувати типізацію. Замість оператора **print** слід використовувати логування на рівні
+**INFO**. Для форматування коду використовуйте **black**.
 
-```
-Виконуй це завдання у файлі task-1.js
-```
+## Завдання 1. Патерн фабрика
 
-Станція з продажу ремонтних дроїдів готова до запуску, залишилося написати програмне забезпечення для відділу продажів.
+Наступний код представляє просту систему для створення транспортних засобів. У нас є два класи: Car та Motorcycle. Кожен клас має метод start_engine(), який імітує запуск двигуна
+відповідного транспортного засобу. Наразі, щоб створити новий транспортний засіб, ми просто створюємо екземпляр відповідного класу з вказаними маркою (make) та моделлю (model).
 
-Оголоси функцію **makeTransaction**, яка очікує два параметри, значення яких будуть задаватися під час її виклику:
+```python
+class Car:
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
 
-- **quantity**— перший параметр, число, що містить кількість замовлених дроїдів
-- **pricePerDroid** — другий параметр, число, що містить вартість одного дроїда
+    def start_engine(self):
+        print(f"{self.make} {self.model}: Двигун запущено")
 
-Доповни код функції так, щоб вона повертала рядок з повідомленням про покупку ремонтних дроїдів: **"You ordered &lt;quantity&gt; droids worth &lt;totalPrice&gt; credits!"**, де:
+class Motorcycle:
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
 
-- **&lt;quantity&gt;** — це кількість замовлених дроїдів
-- **&lt;totalPrice&gt;** — це загальна вартість замовлення, тобто вартість усіх замовлених дроїдів.
+    def start_engine(self):
+        print(f"{self.make} {self.model}: Мотор заведено")
 
-Візьми код нижче і встав після оголошення своєї функції для перевірки коректності її роботи. У консоль будуть виведені результати її роботи.
+# Використання
+vehicle1 = Car("Toyota", "Corolla")
+vehicle1.start_engine()
 
-```javascript
-console.log(makeTransaction(5, 3000)); // "You ordered 5 droids worth 15000 credits!"
-console.log(makeTransaction(3, 1000)); // "You ordered 3 droids worth 3000 credits!"
-console.log(makeTransaction(10, 500)); // "You ordered 10 droids worth 5000 credits!"
-```
-
-Залиш цей код для перевірки ментором.
-
-### На що буде звертати увагу ментор при перевірці:
-
-- Оголошена функція makeTransaction(quantity, pricePerDroid)
-- Виклик makeTransaction(5, 3000) повертає "You ordered 5 droids worth 15000 credits!"
-- Виклик makeTransaction(3, 1000) повертає "You ordered 3 droids worth 3000 credits!"
-- Виклик makeTransaction(10, 500) повертає "You ordered 10 droids worth 5000 credits!"
-- В консоль виведені всі результаті викликів
-- Виклик makeTransaction з будь якими-валідними аргументами повертає правильне значення
-
-## Задача 2. Доставка товару
-
-```
-Виконуй це завдання у файлі task-2.js
+vehicle2 = Motorcycle("Harley-Davidson", "Sportster")
+vehicle2.start_engine()
 ```
 
-Оголоси функцію getShippingMessage, яка очікує три параметри, значення яких будуть задаватися під час її виклику:
+Наступним кроком потрібно створювати транспортні засоби з урахуванням специфікацій різних регіонів наприклад, для США US Spec та ЄС EU Spec.
 
-- **country** — перший параметр, рядок, що містить країну доставки
-- **price** — другий параметр, число, що містить загальну вартість товару
-- **deliveryFee** — третій параметр, число, що містить вартість доставки товару
+**Ваше завдання** — реалізувати патерн фабрика, який дозволить створювати транспортні засоби з різними регіональними специфікаціями, не змінюючи основні класи транспортних засобів.
 
-Доповни код функції так, щоб вона повертала рядок з повідомленням про доставку товару в країну користувача: **"Shipping to &lt;country&gt; will cost &lt;totalPrice&gt; credits"**, де:
+### Ход виконання завдання 1:
 
-- **&lt;country&gt;** — це країни доставки
-- **&lt;totalPrice&gt;** — це загальна вартість замовлення, що включає вартість товару і його доставки.
+1. Створити абстрактний базовий клас Vehicle з методом start_engine().
+1. Змінити класи Car та Motorcycle, щоб вони успадковувались від Vehicle.
+1. Створити абстрактний клас VehicleFactory з методами create_car() та create_motorcycle().
+1. Реалізувати два класи фабрики: USVehicleFactory та EUVehicleFactory. Ці фабрики повинні створювати автомобілі та мотоцикли з позначкою регіону наприклад, Ford Mustang (US Spec)
+   відповідно для США.
+1. Змініть початковий код так, щоб він використовував фабрики для створення транспортних засобів.
 
-Візьми код нижче і встав після оголошення своєї функції для перевірки коректності її роботи. У консоль будуть виведені результати її роботи.
+### Очікуваний результат
 
-```javascript
-console.log(getShippingMessage('Australia', 120, 50)); // "Shipping to Australia will cost 170 credits"
-console.log(getShippingMessage('Germany', 80, 20)); // "Shipping to Germany will cost 100 credits"
-console.log(getShippingMessage('Sweden', 100, 20)); // "Shipping to Sweden will cost 120 credits"
+Код, що дозволяє легко створювати транспортні засоби для різних регіонів, використовуючи відповідні фабрики.
+
+## Завдання 2. SOLID
+
+Перед вами спрощена програма для керування бібліотекою книг. Програма має можливість додавання нових книг, видалення книг та відображення всіх книг у бібліотеці. Користувач має
+змогу взаємодіяти з програмою через командний рядок, використовуючи команди add, remove, show та exit.
+
+```python
+class Library:
+    def __init__(self):
+        self.books = []
+
+    def add_book(self, title, author, year):
+        book = {
+            "title": title,
+            "author": author,
+            "year": year
+        }
+        self.books.append(book)
+
+    def remove_book(self, title):
+        for book in self.books:
+            if book["title"] == title:
+                self.books.remove(book)
+                break
+
+    def show_books(self):
+        for book in self.books:
+            print(f'Title: {book["title"]}, Author: {book["author"]}, Year: {book["year"]}')
+
+def main():
+    library = Library()
+
+    while True:
+        command = input("Enter command (add, remove, show, exit): ").strip().lower()
+
+        if command == "add":
+            title = input("Enter book title: ").strip()
+            author = input("Enter book author: ").strip()
+            year = input("Enter book year: ").strip()
+            library.add_book(title, author, year)
+        elif command == "remove":
+            title = input("Enter book title to remove: ").strip()
+            library.remove_book(title)
+        elif command == "show":
+            library.show_books()
+        elif command == "exit":
+            break
+        else:
+            print("Invalid command. Please try again.")
+
+if __name__ == "__main__":
+    main()
+
 ```
 
-Залиш цей код для перевірки ментором.
+**Ваше завдання** — переписати код, щоб він відповідав принципам SOLID.
 
-### На що буде звертати увагу ментор при перевірці:
+### Ход виконання завдання 2:
 
-- Оголошена функція getShippingMessage(country, price, deliveryFee)
-- Виклик getShippingMessage("Australia", 120, 50) повертає "Shipping to Australia will cost 170 credits"
-- Виклик getShippingMessage("Germany", 80, 20) повертає "Shipping to Germany will cost 100 credits"
-- Виклик getShippingMessage("Sweden", 100, 20) повертає "Shipping to Sweden will cost 120 credits"
-- Виклик getShippingMessage з будь якими-валідними аргументами повертає правильне значення
+1. Щоб виконати принцип єдиної відповідальності (SRP), створіть клас Book, який відповідатиме за зберігання інформації про книгу.
+1. Щоб забезпечити принцип відкритості/закритості (OCP), зробіть так, щоб клас Library міг бути розширений для нової функціональності без зміни його коду.
+1. Щоб виконати принцип підстанови Лісков (LSP), переконайтеся, що будь-який клас, який наслідує інтерфейс LibraryInterface, може замінити клас Library без порушення роботи
+   програми.
+1. Щоб виконати принцип розділення інтерфейсів (ISP), використовуйте інтерфейс LibraryInterface для чіткої специфікації методів, які необхідні для роботи з бібліотекою library.
+1. Щоб виконати принцип інверсії залежностей (DIP), зробіть так, щоб класи вищого рівня, такі як LibraryManager, залежали від абстракцій (інтерфейсів), а не від конкретних
+   реалізацій класів.
 
-## Задача 3. Ширина елемента
+```python
+from abc import ABC, abstractmethod
 
+class Book:
+    pass
+
+class LibraryInterface(ABC):
+    pass
+
+class Library(LibraryInterface):
+    pass
+
+class LibraryManager:
+    pass
+
+def main():
+    library = Library()
+    manager = LibraryManager(library)
+
+    while True:
+        command = input("Enter command (add, remove, show, exit): ").strip().lower()
+
+        match command:
+            case "add":
+                title = input("Enter book title: ").strip()
+                author = input("Enter book author: ").strip()
+                year = input("Enter book year: ").strip()
+                manager.add_book(title, author, year)
+            case "remove":
+                title = input("Enter book title to remove: ").strip()
+                manager.remove_book(title)
+            case "show":
+                manager.show_books()
+            case "exit":
+                break
+            case _:
+                print("Invalid command. Please try again.")
+
+if __name__ == "__main__":
+    main()
 ```
-Виконуй це завдання у файлі task-3.js
-```
-
-Оголоси функцію getElementWidth, яка очікує три параметри, значення яких будуть задаватися під час її виклику:
-
-- **content**— перший параметр, ширина контенту
-- **padding** — другий параметр, значення горизонтального падінгу для кожної зі сторін
-- **border** — третій параметр, значення товщини бордера для кожної зі сторін. Значення всіх параметрів будуть рядками формату Npx де N — це довільне число, ціле або дробове.
-
-Доповни код функції так, щоб вона повертала число — загальну ширину елемента. При розрахунку загальної ширини орієнтуйся на те, що значення box-sizing дорівнює border-box.
-
-Візьми код нижче і встав після оголошення своєї функції для перевірки коректності її роботи. У консоль будуть виведені результати її роботи.
-
-```javascript
-console.log(getElementWidth('50px', '8px', '4px')); // 74
-console.log(getElementWidth('60px', '12px', '8.5px')); // 101
-console.log(getElementWidth('200px', '0px', '0px')); // 200
-```
-
-Залиш цей код для перевірки ментором.
-
-### На що буде звертати увагу ментор при перевірці:
-
-- Оголошена функція getElementWidth(content, padding, border)
-- Виклик getElementWidth("50px", "8px", "4px") повертає число 74
-- Виклик getElementWidth("60px", "12px", "8.5px") повертає число 101
-- Виклик getElementWidth("200px", "0px", "0px") повертає число 200
-- Виклик getElementWidth з будь якими-валідними аргументами повертає правильне значення
