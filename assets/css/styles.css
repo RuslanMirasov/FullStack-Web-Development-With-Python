@@ -44,6 +44,8 @@ body {
 }
 
 main {
+  width: 100%;
+  max-width: 700px;
   padding: 40px 20px;
 }
 
@@ -53,6 +55,7 @@ h1 {
   font-size: 32px;
   line-height: 1.2;
   font-weight: 600;
+  text-align: center;
 }
 h1 span {
   color: var(--akcent);
@@ -66,7 +69,6 @@ ul {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 768px;
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -101,7 +103,7 @@ ul a {
   text-decoration: none;
 }
 ul a:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.055);
 }
 
 .conspect {
