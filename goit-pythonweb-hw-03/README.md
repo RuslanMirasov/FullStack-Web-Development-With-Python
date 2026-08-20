@@ -1,159 +1,86 @@
-# Тема 1. Домашня робота
+# Тема 3. Домашня робота
 
-Прийшов час практики. У домашній роботі буде два завдання. В обох завданнях необхідно застосувати типізацію. Замість оператора **print** слід використовувати логування на рівні
-**INFO**. Для форматування коду використовуйте **black**.
+Ваша мета реалізувати найпростіший веб-додаток. За основу взяти наступні файли з цього репозиторію
+https://github.com/GoIT-Python-Web/FullStack-Web-Development-hw3.
 
-## Завдання 1. Патерн фабрика
+## Технічний опис завдання
 
-Наступний код представляє просту систему для створення транспортних засобів. У нас є два класи: Car та Motorcycle. Кожен клас має метод start_engine(), який імітує запуск двигуна
-відповідного транспортного засобу. Наразі, щоб створити новий транспортний засіб, ми просто створюємо екземпляр відповідного класу з вказаними маркою (make) та моделлю (model).
+За аналогією з розглянутим прикладом у конспекті, створіть веб-додаток з маршрутизацією для двох html сторінок: index.html та
+message.html.
 
-```python
-class Car:
-    def __init__(self, make, model):
-        self.make = make
-        self.model = model
+Також:
 
-    def start_engine(self):
-        print(f"{self.make} {self.model}: Двигун запущено")
+- Обробіть під час роботи програми статичні ресурси: style.css, logo.png;
+- Організуйте роботу з формою на сторінці message.html;
+- У разі виникнення помилки 404 Not Found повертайте сторінку error.html
+- Ваша програма працює на порту 3000
 
-class Motorcycle:
-    def __init__(self, make, model):
-        self.make = make
-        self.model = model
+При роботі з формою отриманий байт-рядок перетворюємо у словник і зберігаємо його в json файл data.json в директорію storage.
 
-    def start_engine(self):
-        print(f"{self.make} {self.model}: Мотор заведено")
-
-# Використання
-vehicle1 = Car("Toyota", "Corolla")
-vehicle1.start_engine()
-
-vehicle2 = Motorcycle("Harley-Davidson", "Sportster")
-vehicle2.start_engine()
-```
-
-Наступним кроком потрібно створювати транспортні засоби з урахуванням специфікацій різних регіонів наприклад, для США US Spec та ЄС EU Spec.
-
-**Ваше завдання** — реалізувати патерн фабрика, який дозволить створювати транспортні засоби з різними регіональними специфікаціями, не змінюючи основні класи транспортних засобів.
-
-### Ход виконання завдання 1:
-
-1. Створити абстрактний базовий клас Vehicle з методом start_engine().
-1. Змінити класи Car та Motorcycle, щоб вони успадковувались від Vehicle.
-1. Створити абстрактний клас VehicleFactory з методами create_car() та create_motorcycle().
-1. Реалізувати два класи фабрики: USVehicleFactory та EUVehicleFactory. Ці фабрики повинні створювати автомобілі та мотоцикли з позначкою регіону наприклад, Ford Mustang (US Spec)
-   відповідно для США.
-1. Змініть початковий код так, щоб він використовував фабрики для створення транспортних засобів.
-
-### Очікуваний результат
-
-Код, що дозволяє легко створювати транспортні засоби для різних регіонів, використовуючи відповідні фабрики.
-
-## Завдання 2. SOLID
-
-Перед вами спрощена програма для керування бібліотекою книг. Програма має можливість додавання нових книг, видалення книг та відображення всіх книг у бібліотеці. Користувач має
-змогу взаємодіяти з програмою через командний рядок, використовуючи команди add, remove, show та exit.
+Формат запису файлу data.json наступний:
 
 ```python
-class Library:
-    def __init__(self):
-        self.books = []
-
-    def add_book(self, title, author, year):
-        book = {
-            "title": title,
-            "author": author,
-            "year": year
-        }
-        self.books.append(book)
-
-    def remove_book(self, title):
-        for book in self.books:
-            if book["title"] == title:
-                self.books.remove(book)
-                break
-
-    def show_books(self):
-        for book in self.books:
-            print(f'Title: {book["title"]}, Author: {book["author"]}, Year: {book["year"]}')
-
-def main():
-    library = Library()
-
-    while True:
-        command = input("Enter command (add, remove, show, exit): ").strip().lower()
-
-        if command == "add":
-            title = input("Enter book title: ").strip()
-            author = input("Enter book author: ").strip()
-            year = input("Enter book year: ").strip()
-            library.add_book(title, author, year)
-        elif command == "remove":
-            title = input("Enter book title to remove: ").strip()
-            library.remove_book(title)
-        elif command == "show":
-            library.show_books()
-        elif command == "exit":
-            break
-        else:
-            print("Invalid command. Please try again.")
-
-if __name__ == "__main__":
-    main()
-
+{
+  "2022-10-29 20:20:58.020261": {
+    "username": "krabaton",
+    "message": "First message"
+  },
+  "2022-10-29 20:21:11.812177": {
+    "username": "Krabat",
+    "message": "Second message"
+  }
+}
 ```
 
-**Ваше завдання** — переписати код, щоб він відповідав принципам SOLID.
+Де ключ кожного повідомлення - це час отримання повідомлення: datetime.now(). Тобто кожне нове повідомлення від веб-програми
+дописується до файлу storage/data.json з часом отримання.
 
-### Ход виконання завдання 2:
+Додайте маршрут /read при звертанні до якого буде сформована інформаційна сторінка. Ця сторінка повинна бути шаблоном Jinja2. Вона
+повинна виводити всі збереженні сповіщення з файлу data.json
 
-1. Щоб виконати принцип єдиної відповідальності (SRP), створіть клас Book, який відповідатиме за зберігання інформації про книгу.
-1. Щоб забезпечити принцип відкритості/закритості (OCP), зробіть так, щоб клас Library міг бути розширений для нової функціональності без зміни його коду.
-1. Щоб виконати принцип підстанови Лісков (LSP), переконайтеся, що будь-який клас, який наслідує інтерфейс LibraryInterface, може замінити клас Library без порушення роботи
-   програми.
-1. Щоб виконати принцип розділення інтерфейсів (ISP), використовуйте інтерфейс LibraryInterface для чіткої специфікації методів, які необхідні для роботи з бібліотекою library.
-1. Щоб виконати принцип інверсії залежностей (DIP), зробіть так, щоб класи вищого рівня, такі як LibraryManager, залежали від абстракцій (інтерфейсів), а не від конкретних
-   реалізацій класів.
+### Додаткове завдання
+
+Це додаткове завдання і його можна не виконувати для здачі цього домашнього завдання.
+
+1. Створіть Dockerfile та запустіть ваш додаток як Docker-контейнер
+1. За допомогою механізму voluemes, зберігайте дані з storage/data.json не всередині контейнера
+
+### Загальні вимоги до виконання домашнього завдання
+
+Вимоги до виконання домашнього завдання є обов’язковою умовою оцінювання домашнього завдання ментором. Якщо якусь з вимог не
+виконано, ДЗ відправляється ментором на доопрацювання без оцінювання. Якщо вам «тільки уточнити»😉 або ви «застопорилися» на
+якомусь з етапів виконання — звертайтеся до ментора у Slack.
+
+## Основні вимоги:
+
+### 1. Маршрутизація.
+
+- Створені дві HTML-сторінки: index.html та message.html.
+- Присутня обробка статичних ресурсів (файл style.css, зображення logo.png).
+- Веб-додаток працює на порту 3000.
+
+### 2. Обробка форм.
+
+- Форма на сторінці message.html працює коректно, відправляє дані (username та message).
+- Дані з форми перетворюються на словник та записуються у файл data.json у форматі:
 
 ```python
-from abc import ABC, abstractmethod
-
-class Book:
-    pass
-
-class LibraryInterface(ABC):
-    pass
-
-class Library(LibraryInterface):
-    pass
-
-class LibraryManager:
-    pass
-
-def main():
-    library = Library()
-    manager = LibraryManager(library)
-
-    while True:
-        command = input("Enter command (add, remove, show, exit): ").strip().lower()
-
-        match command:
-            case "add":
-                title = input("Enter book title: ").strip()
-                author = input("Enter book author: ").strip()
-                year = input("Enter book year: ").strip()
-                manager.add_book(title, author, year)
-            case "remove":
-                title = input("Enter book title to remove: ").strip()
-                manager.remove_book(title)
-            case "show":
-                manager.show_books()
-            case "exit":
-                break
-            case _:
-                print("Invalid command. Please try again.")
-
-if __name__ == "__main__":
-    main()
+{
+  "%timestamp%": {
+    "username": "example",
+    "message": "example message"
+  }
+}
 ```
+
+3. При зверненні до маршруту /read повертається шаблонна сторінка Jinja2, яка виводить всі збережені повідомлення з файлу
+   data.json.
+
+4. При виникненні помилки 404 повертається сторінка error.html.
+
+5. Повідомлення зберігаються у файл storage/data.json у форматі JSON, де ключ - це час отримання повідомлення.
+
+### Додаткові вимоги (опціональні, не обов’язкові для виконання):
+
+- Створений Dockerfile, який дозволяє запустити додаток як Docker-контейнер.
+- Застосовано механізм volumes для збереження файлу data.json за межами контейнера.

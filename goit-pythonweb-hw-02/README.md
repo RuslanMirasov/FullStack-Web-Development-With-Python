@@ -1,159 +1,40 @@
-# Тема 1. Домашня робота
+# Тема 2. Домашня робота
 
-Прийшов час практики. У домашній роботі буде два завдання. В обох завданнях необхідно застосувати типізацію. Замість оператора **print** слід використовувати логування на рівні
-**INFO**. Для форматування коду використовуйте **black**.
+Сьогодні ми перейдемо до практичної роботи з розгортанням застосунків.
 
-## Завдання 1. Патерн фабрика
+Вам необхiдно клонувати **FastAPI-застосунок**, налаштувати його та запустити в Docker-контейнері. Після цього перевірите
+правильність роботи застосунку і переконатись в успішному підключенні до бази даних.
 
-Наступний код представляє просту систему для створення транспортних засобів. У нас є два класи: Car та Motorcycle. Кожен клас має метод start_engine(), який імітує запуск двигуна
-відповідного транспортного засобу. Наразі, щоб створити новий транспортний засіб, ми просто створюємо екземпляр відповідного класу з вказаними маркою (make) та моделлю (model).
+## Технічний опис завдання
 
-```python
-class Car:
-    def __init__(self, make, model):
-        self.make = make
-        self.model = model
+1. Використовуючи команду git clone, клонуйте репозиторій за адресою
+   https://github.com/GoIT-Python-Web/FullStack-Web-Development-hw2. Перейдіть у клонований каталог.
+2. Створіть Dockerfile із вказівками для створення образу Docker застосунку. **Увага! Використовуйте версію Python 3.10 для
+   правильної роботи застосунку**
+3. Напишіть docker-compose.yaml з конфігурацією для застосунку та PostgreSQL.
+4. Використайте Docker Compose для побудови середовища, команду docker-compose up для запуску середовища.
 
-    def start_engine(self):
-        print(f"{self.make} {self.model}: Двигун запущено")
+### 💡 Підказка:
 
-class Motorcycle:
-    def __init__(self, make, model):
-        self.make = make
-        self.model = model
-
-    def start_engine(self):
-        print(f"{self.make} {self.model}: Мотор заведено")
-
-# Використання
-vehicle1 = Car("Toyota", "Corolla")
-vehicle1.start_engine()
-
-vehicle2 = Motorcycle("Harley-Davidson", "Sportster")
-vehicle2.start_engine()
-```
-
-Наступним кроком потрібно створювати транспортні засоби з урахуванням специфікацій різних регіонів наприклад, для США US Spec та ЄС EU Spec.
-
-**Ваше завдання** — реалізувати патерн фабрика, який дозволить створювати транспортні засоби з різними регіональними специфікаціями, не змінюючи основні класи транспортних засобів.
-
-### Ход виконання завдання 1:
-
-1. Створити абстрактний базовий клас Vehicle з методом start_engine().
-1. Змінити класи Car та Motorcycle, щоб вони успадковувались від Vehicle.
-1. Створити абстрактний клас VehicleFactory з методами create_car() та create_motorcycle().
-1. Реалізувати два класи фабрики: USVehicleFactory та EUVehicleFactory. Ці фабрики повинні створювати автомобілі та мотоцикли з позначкою регіону наприклад, Ford Mustang (US Spec)
-   відповідно для США.
-1. Змініть початковий код так, щоб він використовував фабрики для створення транспортних засобів.
-
-### Очікуваний результат
-
-Код, що дозволяє легко створювати транспортні засоби для різних регіонів, використовуючи відповідні фабрики.
-
-## Завдання 2. SOLID
-
-Перед вами спрощена програма для керування бібліотекою книг. Програма має можливість додавання нових книг, видалення книг та відображення всіх книг у бібліотеці. Користувач має
-змогу взаємодіяти з програмою через командний рядок, використовуючи команди add, remove, show та exit.
+Внесіть зміни в рядку підключення до бази даних **SQLALCHEMY_DATABASE_URL**: вона знаходиться у файлі **\\conf\\db.py**. Замість
+**localhost** вставте ім'я сервісу PostgreSQL з вашого файлу **docker-compose.yaml** .
 
 ```python
-class Library:
-    def __init__(self):
-        self.books = []
-
-    def add_book(self, title, author, year):
-        book = {
-            "title": title,
-            "author": author,
-            "year": year
-        }
-        self.books.append(book)
-
-    def remove_book(self, title):
-        for book in self.books:
-            if book["title"] == title:
-                self.books.remove(book)
-                break
-
-    def show_books(self):
-        for book in self.books:
-            print(f'Title: {book["title"]}, Author: {book["author"]}, Year: {book["year"]}')
-
-def main():
-    library = Library()
-
-    while True:
-        command = input("Enter command (add, remove, show, exit): ").strip().lower()
-
-        if command == "add":
-            title = input("Enter book title: ").strip()
-            author = input("Enter book author: ").strip()
-            year = input("Enter book year: ").strip()
-            library.add_book(title, author, year)
-        elif command == "remove":
-            title = input("Enter book title to remove: ").strip()
-            library.remove_book(title)
-        elif command == "show":
-            library.show_books()
-        elif command == "exit":
-            break
-        else:
-            print("Invalid command. Please try again.")
-
-if __name__ == "__main__":
-    main()
-
+SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://postgres:567234@localhost:5432/hw02"
 ```
 
-**Ваше завдання** — переписати код, щоб він відповідав принципам SOLID.
+Коли ви використовуєте Docker Compose, кожен сервіс (контейнер) має власну мережу, і вони зазвичай не можуть звертатися один до
+одного за допомогою localhost. Замість цього, ви маєте використовувати назву сервісу в якості імені хоста.
 
-### Ход виконання завдання 2:
+5. Перевірте функціональність застосунку та доступність бази даних. Якщо все правильно налаштовано у файлі docker-compose.yaml,
+   натиснувши кнопку Перевірити БД, ви повинні побачити "Welcome to FastAPI!"
 
-1. Щоб виконати принцип єдиної відповідальності (SRP), створіть клас Book, який відповідатиме за зберігання інформації про книгу.
-1. Щоб забезпечити принцип відкритості/закритості (OCP), зробіть так, щоб клас Library міг бути розширений для нової функціональності без зміни його коду.
-1. Щоб виконати принцип підстанови Лісков (LSP), переконайтеся, що будь-який клас, який наслідує інтерфейс LibraryInterface, може замінити клас Library без порушення роботи
-   програми.
-1. Щоб виконати принцип розділення інтерфейсів (ISP), використовуйте інтерфейс LibraryInterface для чіткої специфікації методів, які необхідні для роботи з бібліотекою library.
-1. Щоб виконати принцип інверсії залежностей (DIP), зробіть так, щоб класи вищого рівня, такі як LibraryManager, залежали від абстракцій (інтерфейсів), а не від конкретних
-   реалізацій класів.
+Якщо замість "Welcome to FastAPI!" ви бачите червоне віконце з повідомленням про помилку, значить ви неправильно налаштували
+docker-compose.yaml
 
-```python
-from abc import ABC, abstractmethod
+## Критерії прийняття
 
-class Book:
-    pass
-
-class LibraryInterface(ABC):
-    pass
-
-class Library(LibraryInterface):
-    pass
-
-class LibraryManager:
-    pass
-
-def main():
-    library = Library()
-    manager = LibraryManager(library)
-
-    while True:
-        command = input("Enter command (add, remove, show, exit): ").strip().lower()
-
-        match command:
-            case "add":
-                title = input("Enter book title: ").strip()
-                author = input("Enter book author: ").strip()
-                year = input("Enter book year: ").strip()
-                manager.add_book(title, author, year)
-            case "remove":
-                title = input("Enter book title to remove: ").strip()
-                manager.remove_book(title)
-            case "show":
-                manager.show_books()
-            case "exit":
-                break
-            case _:
-                print("Invalid command. Please try again.")
-
-if __name__ == "__main__":
-    main()
-```
+- Клоновано репозиторій, створено Dockerfile для створення образу Docker застосунку.
+- Написано docker-compose.yaml з конфігурацією для застосунку та PostgreSQL.
+- Використано Docker Compose, команду docker-compose up для побудови та запуску середовища.
+- Застосунок є функціональним, а база даних — доступною, що підтверджується натисканням кнопки Перевірити БД.
