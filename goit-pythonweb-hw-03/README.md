@@ -3,6 +3,47 @@
 Ваша мета реалізувати найпростіший веб-додаток. За основу взяти наступні файли з цього репозиторію
 https://github.com/GoIT-Python-Web/FullStack-Web-Development-hw3.
 
+## Запуск
+
+### Docker (рекомендовано)
+
+```bash
+docker compose up --build
+```
+
+### Без Docker (venv)
+
+```bash
+python -m venv venv
+source venv/Scripts/activate   # Windows/git bash; на Linux/macOS: source venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
+
+Застосунок буде доступний на http://localhost:3000/.
+
+## Структура проєкту
+
+```HTML
+goit-pythonweb-hw-03/
+├── main.py                        # HTTP-сервер
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yaml            # базовий конфіг
+├── docker-compose.override.yaml   # dev-конфіг: live-код + авто-рестарт
+├── .dockerignore
+├── static/                        # CSS, зображення
+│   ├── style.css
+│   └── logo.png
+├── templates/                     # HTML-сторінки
+│   ├── index.html
+│   ├── message.html
+│   ├── error.html
+│   └── read.html
+└── storage/
+    └── data.json                  # збережені повідомлення
+```
+
 ## Технічний опис завдання
 
 За аналогією з розглянутим прикладом у конспекті, створіть веб-додаток з маршрутизацією для двох html сторінок: index.html та
