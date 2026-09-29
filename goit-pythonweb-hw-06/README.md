@@ -1,5 +1,29 @@
 # Тема 6. Домашня робота
 
+## Запуск
+
+Створіть файл `.env`, заповнивши його за прикладом `.env.example` своїми значеннями.
+
+```bash
+POSTGRES_DB=hw06
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=123qweQ
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+```
+
+Команди:
+
+```bash
+docker compose up -d --build   # піднімає Postgres + контейнер застосунку
+
+docker compose exec app alembic upgrade head   # застосувати міграції, створити таблиці
+docker compose exec app python seed.py          # заповнити базу випадковими даними
+docker compose exec app python my_select.py      # прогнати всі 10 запитів
+```
+
+## Технічний опис завдання
+
 Реалізуйте базу даних, схема якої містить:
 
 - Таблиця студентів;
@@ -16,8 +40,6 @@ docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpasswo
 
 Замість some-postgres виберіть свою назву контейнера, а замість mysecretpassword придумайте свій пароль для підключення до бази
 даних
-
-## Технічний опис завдання
 
 ### Перший крок
 
