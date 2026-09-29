@@ -23,3 +23,27 @@ class ContactResponse(ContactModel):
     updated_at: datetime | None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class User(BaseModel):
+    id: int
+    username: str
+    email: str
+    avatar: str | None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class UserCreate(BaseModel):
+    username: str = Field(min_length=3, max_length=50)
+    email: EmailStr = Field(max_length=100)
+    password: str = Field(min_length=6, max_length=72)
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class RequestEmail(BaseModel):
+    email: EmailStr
