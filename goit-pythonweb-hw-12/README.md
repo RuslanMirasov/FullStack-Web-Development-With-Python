@@ -52,6 +52,47 @@ docker compose exec db sh -c 'psql -U $POSTGRES_USER -d $POSTGRES_DB -c "UPDATE 
 docker compose exec redis redis-cli del user:your_username   # скинути кеш користувача
 ```
 
+## Структура проєкту
+
+```
+├── main.py                        # Точка входу: FastAPI, CORS, обробник 429, підключення роутерів
+├── src/
+│   ├── api/                       # Маршрути (presentation layer)
+│   │   ├── auth.py                #   реєстрація, вхід, підтвердження email, скидання пароля
+│   │   ├── contacts.py            #   CRUD контактів, пошук, дні народження
+│   │   ├── users.py               #   /me з лімітом запитів, аватар (лише admin)
+│   │   └── utils.py               #   healthchecker
+│   ├── services/                  # Бізнес-логіка
+│   │   ├── auth.py                #   паролі, JWT, кеш користувача в Redis, ролі
+│   │   ├── contacts.py            #   сервіс контактів
+│   │   ├── users.py               #   сервіс користувачів, аватар Gravatar
+│   │   ├── email.py               #   листи підтвердження та скидання пароля
+│   │   ├── upload_file.py         #   завантаження аватара в Cloudinary
+│   │   └── templates/             #   HTML-шаблони листів
+│   ├── repository/                # Доступ до даних (запити до бази)
+│   │   ├── contacts.py
+│   │   └── users.py
+│   ├── database/
+│   │   ├── models.py              #   ORM-моделі User, Contact, ролі UserRole
+│   │   ├── db.py                  #   асинхронне підключення до PostgreSQL
+│   │   └── redis.py               #   підключення до Redis
+│   ├── conf/
+│   │   └── config.py              #   налаштування з .env (pydantic-settings)
+│   └── schemas.py                 # Pydantic-схеми запитів і відповідей
+├── tests/
+│   ├── unit/                      # Модульні тести: репозиторії, сервіси, підключення
+│   └── integration/               # Інтеграційні тести маршрутів, conftest.py з фікстурами
+├── migrations/                    # Міграції Alembic
+├── docs/                          # Документація Sphinx: conf.py, index.rst
+├── docker-compose.yaml            # Сервіси db (PostgreSQL), redis, app
+├── docker-compose.override.yaml   # Режим розробки: --reload і монтування коду
+├── Dockerfile
+├── alembic.ini
+├── pyproject.toml                 # Налаштування pytest і coverage
+├── requirements.txt
+└── .env.example                   # Приклад змінних середовища
+```
+
 ## Тести
 
 Модульні тести (`tests/unit`) перевіряють репозиторії та сервіси з моками сесії бази даних. Інтеграційні тести

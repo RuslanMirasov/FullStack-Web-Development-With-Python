@@ -20,7 +20,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 language = "uk"
 
 html_theme = "nature"
-html_static_path = ["_static"]
+html_static_path = []
 html_theme_options = {"body_max_width": "none"}
 
 autodoc_class_signature = "separated"
