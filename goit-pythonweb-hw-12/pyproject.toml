@@ -2,4 +2,10 @@
 pythonpath = "."
 testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "function"
-filterwarnings = "ignore::DeprecationWarning"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::starlette.exceptions.StarletteDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]

@@ -1,3 +1,5 @@
+"""Службові маршрути застосунку."""
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +11,18 @@ router = APIRouter(tags=["utils"])
 
 @router.get("/healthchecker")
 async def healthchecker(db: AsyncSession = Depends(get_db)):
+    """
+    Перевіряє підключення до бази даних.
+
+    Args:
+        db: Сесія бази даних.
+
+    Returns:
+        Повідомлення про успішну роботу застосунку.
+
+    Raises:
+        HTTPException: 500, якщо база даних недоступна.
+    """
     try:
         result = await db.execute(text("SELECT 1"))
         result = result.scalar_one_or_none()

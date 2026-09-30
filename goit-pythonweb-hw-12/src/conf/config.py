@@ -1,8 +1,17 @@
+"""Налаштування застосунку, що завантажуються з файлу .env."""
+
 from pydantic import ConfigDict, EmailStr
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """
+    Змінні середовища застосунку.
+
+    Значення читаються з файлу ``.env`` або зі змінних оточення. Поля без
+    значення за замовчуванням є обов'язковими.
+    """
+
     POSTGRES_DB: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
@@ -38,6 +47,12 @@ class Settings(BaseSettings):
 
     @property
     def DB_URL(self) -> str:
+        """
+        Рядок підключення до PostgreSQL для асинхронного драйвера asyncpg.
+
+        Returns:
+            URL бази даних, зібраний зі змінних ``POSTGRES_*``.
+        """
         return (
             f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
